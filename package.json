@@ -25,9 +25,10 @@
   },
   "scripts": {
     "test": "none",
+    "start": "node build/start.js",
     "dev": "nodemon --config \"utils/nodemon.json\"/",
     "build": "rm -rf ./build/ && tsc",
-    "prod": "node build/start.js"
+    "heroku-postbuild":"rm -rf ./build/ && tsc"
   },
   "repository": {
     "type": "git",
@@ -38,5 +39,10 @@
   "bugs": {
     "url": "https://github.com/tapontikes/property-managment-middleware/issues"
   },
-  "homepage": "https://github.com/tapontikes/property-managment-middleware#readme"
+  "homepage": "https://github.com/tapontikes/property-managment-middleware#readme",
+
+  "engines": {
+    "node": "10.x",
+    "npm": "6.x"
+  }
 }
