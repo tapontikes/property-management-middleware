@@ -1,16 +1,19 @@
 import { Request, Response } from 'express';
 import {Controller, Get, Put, Post, Delete, ClassMiddleware} from '@overnightjs/core';
 import { Logger } from '@overnightjs/logger';
+import {userInfo} from 'os';
+import {checkJwt} from '../../middleware/middleware';
 
 
-@Controller('api/protected')
-export class PrivateController {
+
+@Controller('api/properties')
+@ClassMiddleware(checkJwt)
+export class PropertiesController {
 
     @Get('/')
-    private getMessages(req: Request, res: Response) {
-        Logger.Info(req.params.msg);
+    private getProperties(req: Request, res: Response) {
         res.status(200).json({
-            message: 'authed',
+            message: req.body.user,
         });
     }
 

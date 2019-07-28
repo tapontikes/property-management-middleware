@@ -1,10 +1,12 @@
 import * as bodyParser from 'body-parser';
-import { PrivateController } from './controllers/privateController';
-import { PublicController } from './controllers/publicController';
 import {Server} from '@overnightjs/core';
 import {Logger} from '@overnightjs/logger';
+import {PropertiesController} from './controllers/properties/properties.controller';
+import {checkJwt} from './middleware/middleware';
+
 
 class AppServer extends Server {
+
 
     constructor() {
         super(true);
@@ -15,9 +17,11 @@ class AppServer extends Server {
 
 
     private setupControllers(): void {
-        const privateController = new PrivateController();
-        const publicController = new PublicController();
-        super.addControllers([privateController, publicController]);
+        // const privateController = new PrivateController();
+        // const publicController = new PublicController();
+        // const authController = new AuthController();
+        const propertiesCtrl = new PropertiesController();
+        super.addControllers([propertiesCtrl]);
     }
 
     public start(port: number): void {
@@ -25,7 +29,6 @@ class AppServer extends Server {
             Logger.Imp('Server Started: ' + port);
         });
     }
-
 
 
 }
