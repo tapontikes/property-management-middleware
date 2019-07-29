@@ -25,10 +25,9 @@
   },
   "scripts": {
     "test": "none",
-    "start": "node build/start.js",
+    "start": "node ./build/src/start.js",
     "dev": "nodemon --config \"utils/nodemon.json\"/",
-    "build": "rm -rf ./build/ && tsc",
-    "heroku-postbuild":"rm -rf ./build/ && tsc"
+    "build": "tsc"
   },
   "repository": {
     "type": "git",
