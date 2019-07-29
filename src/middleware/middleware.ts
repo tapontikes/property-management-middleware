@@ -9,7 +9,7 @@ const checkJwt = jwt({
         secret: jwksClient.expressJwtSecret({
             cache: true,
             rateLimit: true,
-            jwksRequestsPerMinute: 5,
+            jwksRequestsPerMinute: 10,
             jwksUri: JWKS_URL,
         }),
         session: false,
