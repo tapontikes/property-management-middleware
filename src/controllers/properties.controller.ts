@@ -1,21 +1,34 @@
 import { Request, Response } from 'express';
 import {Controller, Get, Put, Post, Delete, ClassMiddleware} from '@overnightjs/core';
-import { Logger } from '@overnightjs/logger';
-import {userInfo} from 'os';
-import {checkJwt} from '../../middleware/middleware';
-
+import {checkJwt} from '../middleware/middleware';
+import UserService from '../service/user.service';
+import {IPropertyDocument, IRequest, IResponse} from '../models/models';
+import PropertiesService from '../service/properties.service';
 
 
 @Controller('api/properties')
-@ClassMiddleware(checkJwt)
+@ClassMiddleware([checkJwt])
 export class PropertiesController {
 
+    public propertiesService = new PropertiesService();
+
     @Get('/')
-    private getProperties(req: Request, res: Response) {
-        res.status(200).json({
-            message: req.body.user,
+    private getProperties(req: IRequest, res: IResponse) {
+      this.propertiesService.getProperties().then((properties: IPropertyDocument[]) => {
+        res.json(properties);
+      })
+    /*
+      const prop = {
+            address: '1193 Cranston St.',
+            city: 'Cranston',
+            rent: 1500,
+            state: 'RI',
+            } as IPropertyDocument;
+        this.propertiesService.insertProperty(prop).then((props) => {
+            res.send(props);
         });
-    }
+     */
+
 
     /*
     @Get(':msg')
