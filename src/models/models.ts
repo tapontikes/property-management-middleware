@@ -1,5 +1,6 @@
-import {Types, Document} from 'mongoose';
+import {Types, Document, Schema} from 'mongoose';
 import {Request, Response} from 'express';
+import {subscriptions} from 'stripe';
 
 export interface IRequest extends Request {
     user?: any;
@@ -10,14 +11,16 @@ export interface IResponse extends Response {
 }
 
 export interface IPropertyDocument extends Document {
-    address?: string;
-    city?: string;
-    state?: string;
-    rent?: number;
-    renters?: Types.Array<IPropertyRenter>;
+    address: string;
+    city: string;
+    state: string;
+    rent: number;
+    tenants: [string];
 }
 
-export interface IPropertyRenter {
-    id: string;
-    rentShare: number;
+export interface ITenant extends Document {
+    sub: string;
+    stripeId: string;
+    subscriptions: [string];
+
 }

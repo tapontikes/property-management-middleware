@@ -8,9 +8,8 @@ export class UserController {
 
     private userService = new UserService();
 
-    /*
     @Get('/')
-    private getProperties(req: IRequest, res: IResponse) {
+    private getCurrentUser(req: IRequest, res: IResponse) {
         let token = null;
         if (req.headers.authorization) {
             token = req.headers.authorization;
@@ -21,8 +20,6 @@ export class UserController {
             });
         });
     }
-
-    */
 
 
 }

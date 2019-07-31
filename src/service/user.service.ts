@@ -3,11 +3,10 @@ import {AUTH0_URL} from '../../utils/config';
 
 class UserService {
 
-    constructor() {}
+    constructor() { }
 
     public getUser(token: any) {
      return new Promise((resolve, reject) => {
-
          const options = { method: 'POST',
              url: `${AUTH0_URL}/userinfo`,
              headers: {Authorization: token }};
@@ -17,7 +16,8 @@ class UserService {
              resolve(body);
          });
      });
-    }
+ }
+
 
 
 
