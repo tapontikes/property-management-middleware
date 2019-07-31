@@ -1,9 +1,7 @@
 import {Logger} from '@overnightjs/logger';
 import propertyModel from '../mongoose/property.model';
 import {IPropertyDocument, ITenant} from '../models/models';
-import tenantModel from '../mongoose/tenant.model';
 import TenantService from './tenant.service';
-import {pathToFileURL} from 'url';
 
 class PropertiesService {
 

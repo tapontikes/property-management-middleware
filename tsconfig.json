@@ -23,8 +23,5 @@
   ],
   "exclude": [
     "./src/public/"
-  ],
-  "files": [
-    "./src/types.d.ts"
   ]
 }
