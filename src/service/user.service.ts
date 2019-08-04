@@ -1,15 +1,15 @@
 import request = require('request');
 import {AUTH0_URL} from '../../utils/config';
+import {ClassMiddleware} from '@overnightjs/core';
+import {getOrRefreshManagementApiToken} from '../middleware/middleware';
 
 class UserService {
 
-    constructor() { }
-
-    public getUser(token: any) {
+    public getUser(token: string, sub: string) {
      return new Promise((resolve, reject) => {
-         const options = { method: 'POST',
-             url: `${AUTH0_URL}/userinfo`,
-             headers: {Authorization: token }};
+         const options = { method: 'GET',
+             url: `${AUTH0_URL}/api/v2/users/${sub}`,
+             headers: {Authorization: `Bearer ${token}` }};
 
          request(options, (error, response, body) => {
              if (error) { throw new Error(error); }

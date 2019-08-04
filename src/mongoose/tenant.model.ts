@@ -1,11 +1,17 @@
 import mongoose = require('mongoose');
-import {Model, Schema, Types} from 'mongoose';
-import {ITenant} from '../models/models';
+import {Document, Model, Schema, Types} from 'mongoose';
+
+export interface ITenant extends Document {
+    sub: string;
+    stripeId: string;
+    subscriptions: [string];
+
+}
 
 const tenantSchema: mongoose.Schema = new mongoose.Schema({
     sub: { type: String, unique: true },
     stripeId: {type: String},
-    subscriptions: {type: [String]},
+    subscriptions: {type: String},
 });
 
 

@@ -1,7 +1,7 @@
 import * as bodyParser from 'body-parser';
 import {Server} from '@overnightjs/core';
 import {Logger} from '@overnightjs/logger';
-import {PropertiesController} from './controllers/properties.controller';
+import {PropertyController} from './controllers/propertyController';
 import {UserController} from './controllers/user.controller';
 import mongoose = require('mongoose');
 import {MONGO_PASSWORD, MONGO_URL, MONGO_USER} from '../utils/config';
@@ -19,9 +19,9 @@ class AppServer extends Server {
 
 
     private setupControllers(): void {
-        const propertiesCtrl = new PropertiesController();
+        const propertyCtrl = new PropertyController();
         const userCtrl = new UserController();
-        super.addControllers([propertiesCtrl, userCtrl]);
+        super.addControllers([propertyCtrl, userCtrl]);
     }
     public connectDb(): void {
         mongoose.Promise = Promise;

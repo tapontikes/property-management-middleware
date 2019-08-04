@@ -1,26 +1,22 @@
-import {Types, Document, Schema} from 'mongoose';
 import {Request, Response} from 'express';
-import {subscriptions} from 'stripe';
+import Stripe = require('stripe');
 
 export interface IRequest extends Request {
     user?: any;
+    token?: any;
 }
 
 export interface IResponse extends Response {
     user?: any;
 }
 
-export interface IPropertyDocument extends Document {
-    address: string;
-    city: string;
-    state: string;
-    rent: number;
-    tenants: [string];
+export interface IProduct extends Stripe.products.IProduct {
+    id: any;
 }
 
-export interface ITenant extends Document {
-    sub: string;
-    stripeId: string;
-    subscriptions: [string];
-
+export interface IAuth0ManagementTokenResponse {
+    access_token: string;
+    scope: string;
+    expires_in: number;
+    token_type: string;
 }

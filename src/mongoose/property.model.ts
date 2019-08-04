@@ -1,14 +1,24 @@
 import mongoose = require('mongoose');
-import {Model, Schema, Types} from 'mongoose';
-import {IPropertyDocument} from '../models/models';
+import {Document, Model} from 'mongoose';
 
+export interface IPropertyDocument extends Document {
+    registrationCode: string;
+    address: string;
+    city: string;
+    state: string;
+    rent: number;
+    stripeProductId: string;
+    tenant: string;
+}
 
 const propertySchema: mongoose.Schema = new mongoose.Schema({
-    propertyCode: { type: String, unique: true },
-    city: { type: String },
-    state: { type: String },
-    rent: {type: Number},
-    tenants: {type: [String]},
+    registrationCode: { type: String, unique: true, required: true },
+    address: {type: String, required: true },
+    city: { type: String, required: true },
+    state: { type: String, required: true },
+    rent: {type: Number, required: true },
+    stripeProductId: {type: String, required: true },
+    tenant: {type: String},
 });
 
 

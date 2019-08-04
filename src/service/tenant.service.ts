@@ -1,5 +1,4 @@
-import {ITenant} from '../models/models';
-import tenantModel from '../mongoose/tenant.model';
+import tenantModel, {ITenant} from '../mongoose/tenant.model';
 import {MongoError} from 'mongodb';
 
 class TenantService {
@@ -25,17 +24,13 @@ class TenantService {
         });
     }
 
-    public createOrGetTenant(sub: string) {
+    public createTenant(sub: string) {
         return new Promise<ITenant>((resolve, reject) => {
             const tenant = {sub} as ITenant;
             tenantModel.create(tenant).then((doc: ITenant) => {
                 resolve(doc);
-            }).catch((err: MongoError) => {
-                if (err.code === 11000) {
-                    this.getTenant(sub).then((newTenant: ITenant) => { resolve (newTenant); });
-                } else {
-                    reject(err);
-                }
+            }).catch((err) => {
+                reject(err);
             });
         });
     }

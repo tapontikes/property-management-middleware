@@ -13,10 +13,8 @@ switch (process.env.NODE_ENV) {
 }
 config({ path });
 
-export const AUTH0_CLIENT_ID: string = process.env.AUTH0_CLIENT_ID || '';
-export const AUTH0_URL: string = process.env.AUTH0_URL || '';
-export const AUTH0_CLIENT_SECRET = process.env.AUTH0_CLIENT_SECRET || '';
-export const LOG_LEVEL = process.env.LOG_LEVEL || '';
+
+export const AUTH0_URL = process.env.AUTH0_URL || '';
 export const JWKS_URL = process.env.JWKS_URL || '';
 export const JWKS_AUDIENCE = process.env.JWKS_AUDIENCE || '';
 export const JWKS_ISSUER = process.env.JWKS_ISSUER || '';
@@ -24,3 +22,5 @@ export const JWKS_ALGORITHM = process.env.JWKS_ALGORITHM || '';
 export const MONGO_URL = process.env.MONGO_URL || '';
 export const MONGO_USER = process.env.MONGO_USER || '';
 export const MONGO_PASSWORD = process.env.MONGO_PASSWORD || '';
+export const STRIPE_API_KEY = process.env.STRIPE_API_KEY || '';
+export const STRIPE_API_SECRET = process.env.STRIPE_API_SECRET || '';

@@ -1,18 +1,19 @@
 import {Controller, Get, Put, Post, Delete, ClassMiddleware} from '@overnightjs/core';
 import {checkJwt} from '../middleware/middleware';
-import {IPropertyDocument, IRequest, IResponse} from '../models/models';
-import PropertiesService from '../service/properties.service';
+import { IRequest, IResponse} from '../models/models';
+import PropertyService from '../service/propertyService';
 import {Logger} from '@overnightjs/logger';
 import ResponseModel from '../models/response.model';
+import {IPropertyDocument} from '../mongoose/property.model';
 
 
 @Controller('api/properties')
 @ClassMiddleware([checkJwt])
-export class PropertiesController {
+export class PropertyController {
 
-    public propertiesService = new PropertiesService();
+    public propertiesService = new PropertyService();
 
-    @Get('/')
+    @Get('/assigned/all')
     private getProperties(req: IRequest, res: IResponse) {
         this.propertiesService.getProperties().then((properties: IPropertyDocument[]) => {
            res.json(properties);
@@ -40,11 +41,15 @@ export class PropertiesController {
         if (!req.params.propertyCode) {
             res.status(400).send(ResponseModel.paramMissingError);
         }
-        this.propertiesService.assignTenant(req.user.sub, req.params.propertyCode).then((updated: number) => {
+        this.propertiesService.assignTenant(req.user.sub, req.params.propertyCode).then((updated: IPropertyDocument) => {
            res.json(updated);
-        }).catch((err) => {
-            Logger.Err(err);
-            res.status(500).send(ResponseModel.internalServerError);
+        }).catch((err: any) => {
+            if (err === 404) {
+                res.status(404).send(ResponseModel.propertyNotFound);
+            } else {
+                Logger.Err(err);
+                res.status(500).send(ResponseModel.internalServerError);
+            }
         });
 
     }
@@ -61,6 +66,19 @@ export class PropertiesController {
             res.status(500).send(ResponseModel.internalServerError);
         });
 
+    }
+
+    // Admin
+
+    @Post('create')
+    private createProperty(req: IRequest, res: IResponse) {
+        const property = req.body as IPropertyDocument;
+        this.propertiesService.createProperty(property).then((newProperty: IPropertyDocument) => {
+            res.json(newProperty);
+        }).catch((err) => {
+            Logger.Err(err);
+            res.status(500).send(ResponseModel.internalServerError);
+        });
     }
 
 
