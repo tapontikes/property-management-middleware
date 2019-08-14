@@ -1,8 +1,7 @@
-import {IProduct, IRequest, IResponse} from '../models/models';
+import {IProduct} from '../models/models';
 import {STRIPE_API_SECRET} from '../../utils/config';
-import {IPropertyDocument} from '../mongoose/property.model';
 import * as Stripe from 'stripe';
-import PropertyService from './propertyService';
+import {IDeleteConfirmation} from 'stripe';
 
 
 class StripeService {
@@ -10,40 +9,54 @@ class StripeService {
     private stripeService = new Stripe(STRIPE_API_SECRET);
 
 
-    public createProduct(property: IPropertyDocument) {
+    // Customer
+
+    public createCustomer() {
+        return new Promise<number>((resolve, reject) => {
+            this.stripeService.customers.create({
+                description: 'Rental Customer',
+                source: "tok_mastercard" // obtained with Stripe.js
+            }, function(err, customer) {
+                // asynchronously called
+            });
+        });
+    }
+
+    // Products
+
+    public createProduct(propertyAddress: string, propertyId: string, rent: number) {
         return new Promise<IProduct>((resolve, reject) => {
             this.stripeService.products.create({
-                name: property.address,
+                name: propertyAddress,
                 type: 'service',
                 metadata: {
-                    propertyId: property._id,
-                    rent: property.rent,
+                    propertyId,
+                    rent,
                 },
             }).then((product: IProduct) => {
                 resolve(product);
-            }).catch((err) =>{
+            }).catch((err) => {
                 reject(err);
             });
         });
     }
 
-
-    public createCustomer() {
-        return new Promise<number>((resolve, reject) => {
-
-
+    public deleteProduct(productId: string) {
+        return new Promise((resolve, reject) => {
+            this.stripeService.products.del(productId).then((conformation: IDeleteConfirmation) => {
+                if (conformation.deleted) {
+                    resolve();
+                } else {
+                    reject(conformation.id);
+                }
+            });
         });
     }
 
-        /*
-        public updateSubscriptionEndDate(sub: string){
-            return new Promise((resolve, reject) => {
-                this.stripeService.subscriptions.update(
-                    sub, {}
 
-            });
-        }
-        */
+    // Subscriptions
+
+
 
     }
 export default StripeService;

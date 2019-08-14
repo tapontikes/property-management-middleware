@@ -1,7 +1,7 @@
 import mongoose = require('mongoose');
 import {Document, Model} from 'mongoose';
 
-export interface IPropertyDocument extends Document {
+export interface IRentalDocument extends Document {
     registrationCode: string;
     address: string;
     city: string;
@@ -11,17 +11,17 @@ export interface IPropertyDocument extends Document {
     tenant: string;
 }
 
-const propertySchema: mongoose.Schema = new mongoose.Schema({
+const rentalSchema: mongoose.Schema = new mongoose.Schema({
     registrationCode: { type: String, unique: true, required: true },
     address: {type: String, required: true },
     city: { type: String, required: true },
     state: { type: String, required: true },
     rent: {type: Number, required: true },
-    stripeProductId: {type: String, required: true },
+    stripeProductId: {type: String },
     tenant: {type: String},
 });
 
 
-const propertyModel: Model<IPropertyDocument> = mongoose.model<IPropertyDocument>('Properties', propertySchema);
+const rentalsModel: Model<IRentalDocument> = mongoose.model<IRentalDocument>('Rentals', rentalSchema);
 
-export default propertyModel;
+export default rentalsModel;

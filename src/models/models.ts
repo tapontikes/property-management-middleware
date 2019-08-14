@@ -20,3 +20,14 @@ export interface IAuth0ManagementTokenResponse {
     expires_in: number;
     token_type: string;
 }
+
+export interface IManagementApiToken {
+    iss: string;
+    sub: string;
+    aud: string;
+    iat: number;
+    exp: number;
+    azp: string;
+    scope: string;
+    gty: string;
+}

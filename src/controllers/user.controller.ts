@@ -1,10 +1,10 @@
 import {Controller, Get, Put, Post, Delete, ClassMiddleware} from '@overnightjs/core';
 import UserService from '../service/user.service';
 import {IRequest, IResponse} from '../models/models';
-import {getOrRefreshManagementApiToken} from '../middleware/middleware';
+import {checkJwt} from '../middleware/middleware';
 
 @Controller('api/user')
-@ClassMiddleware(getOrRefreshManagementApiToken)
+@ClassMiddleware([checkJwt])
 export class UserController {
 
     private userService = new UserService();
@@ -16,6 +16,13 @@ export class UserController {
             res.send({
                 user,
             });
+        });
+    }
+
+    @Put('update')
+    private updateUserMetadata(req: IRequest, res: IResponse) {
+        this.userService.updateUserMetadata(req.user.sub, req.body).then((response) =>{
+            res.send(response);
         });
     }
 

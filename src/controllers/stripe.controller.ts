@@ -9,7 +9,7 @@ import StripeService from '../service/stripe.service';
 
 @Controller('api/stripe')
 @ClassMiddleware([checkJwt])
-export class PropertiesController {
+export class StripeController {
 
     private stripeService = new StripeService();
 
