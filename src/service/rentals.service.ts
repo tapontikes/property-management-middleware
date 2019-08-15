@@ -66,11 +66,11 @@ class RentalsService {
     }
 
     public assignTenant(sub: string, registrationCode: string) {
-        return new Promise<IRentalDocument>((resolve, reject) => {
+        return new Promise<any>((resolve, reject) => {
                 return rentalsModel.findOneAndUpdate({registrationCode}, {tenant: sub}, {
-                    new: true, upsert: true})
+                    new: true})
                     .exec()
-                    .then((doc: IRentalDocument) => {
+                    .then((doc) => {
                         resolve(doc);
                 }).catch((err) => {
                     reject(err);
