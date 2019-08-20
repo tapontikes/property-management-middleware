@@ -18,7 +18,6 @@ class UserService {
            scope: 'read:users update:users',
        });
 
-       console.log(this.auth0)
    }
 
     public getUser(token: string, sub: string) {

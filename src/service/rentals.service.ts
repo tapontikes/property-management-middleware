@@ -65,6 +65,7 @@ class RentalsService {
         });
     }
 
+
     public assignTenant(sub: string, registrationCode: string) {
         return new Promise<any>((resolve, reject) => {
                 return rentalsModel.findOneAndUpdate({registrationCode}, {tenant: sub}, {

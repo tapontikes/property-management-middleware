@@ -1,21 +1,90 @@
 import {Controller, Get, Put, Post, Delete, ClassMiddleware} from '@overnightjs/core';
-import {checkJwt} from '../middleware/middleware';
+import {checkJwt, stripeId} from '../middleware/middleware';
 import {IRequest, IResponse} from '../models/models';
-import * as Stripe from '../service/stripe.service';
-import {STRIPE_API_SECRET} from '../../utils/config';
 import StripeService from '../service/stripe.service';
+import ResponseModel from '../models/response.model';
+import * as Stripe from 'stripe';
+import {IList} from 'stripe';
+import InvoiceItem = Stripe.invoiceItems.InvoiceItem;
+import {Logger} from '@overnightjs/logger';
+import IInvoice = Stripe.invoices.IInvoice;
+import ISubscriptionCreationOptions = Stripe.subscriptions.ISubscriptionCreationOptions;
+import ICustomer = Stripe.customers.ICustomer;
+import StripeError = Stripe.errors.StripeError;
+import ICustomerUpdateOptions = Stripe.customers.ICustomerUpdateOptions;
 
 
 
 @Controller('api/stripe')
-@ClassMiddleware([checkJwt])
+@ClassMiddleware([checkJwt, stripeId])
 export class StripeController {
 
     private stripeService = new StripeService();
 
-    @Post('init/product')
-    public createStripeProductAndPlan(req: IRequest, res: IResponse){
-        //this.stripeService.createStripeProductAndPlan(req.user.sub, req.params.propertyId).then(())
+
+    // Customer
+
+    @Get('customer')
+    public getStripeCustomer(req: IRequest, res: IResponse) {
+        this.stripeService.getCustomer(req.user.sub).then((customer: ICustomer) => {
+            res.status(200).send(customer);
+        }).catch((err: StripeError) => {
+            Logger.Err(err);
+            return res.status(500).send(ResponseModel.internalServerError);
+        });
+    }
+
+    @Post('customer/source')
+    public updateStripeCustomerSource(req: IRequest, res: IResponse) {
+        if (! req.body.source){
+            return res.status(404).send(ResponseModel.propertyNotFound);
+        }
+
+        const customer: ICustomerUpdateOptions = {
+            source: req.body.source,
+        };
+
+        this.stripeService.updateCustomer(req.user.sub, customer).then((newCustomer: ICustomer) =>{
+            return res.status(200).send(newCustomer);
+        }).catch((err: StripeError) => {
+            Logger.Err(err);
+            return res.status(500).send(err);
+        });
+
+    }
+
+
+    // Invoices
+
+    @Get('invoice')
+    public getInvoicesByCustomerId(req: IRequest, res: IResponse) {
+        this.stripeService.getInvoicesByCustomerId(req.user.sub).then((items: IList<InvoiceItem>) => {
+            return res.status(200).send(items);
+        }).catch((err) => {
+            Logger.Err(err);
+            return res.status(500).send(ResponseModel.internalServerError);
+        });
+    }
+
+    @Get('invoice/next')
+    public getNextInvoice(req: IRequest, res: IResponse) {
+        this.stripeService.getNextInvoice(req.user.sub).then((invoice: IInvoice) => {
+            return res.status(200).send(invoice);
+        }).catch((err) => {
+            Logger.Err(err);
+            return res.status(500).send(ResponseModel.internalServerError);
+        });
+
+    }
+
+    @Post('subscription')
+    public createStripeSubscription(req: IRequest, res: IResponse) {
+        const test = {
+            customer: req.user.sub,
+            default_source: req.body.source,
+            // @TODO implement stripe subscription using source token from front end
+        }as ISubscriptionCreationOptions;
+
     }
 
 }

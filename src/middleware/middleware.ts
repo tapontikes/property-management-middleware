@@ -28,6 +28,10 @@ function checkAdmin(req: IRequest, res: IResponse, next: NextFunction) {
     }
 }
 
+function stripeId(req: IRequest, res: IResponse, next: NextFunction) {
+    req.user.sub = (req.user.sub).replace('|', '_');
+    next();
+}
 
 
-export {checkJwt, checkAdmin};
+export {checkJwt, checkAdmin, stripeId};

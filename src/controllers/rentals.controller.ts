@@ -1,4 +1,4 @@
-import {Controller, Get, Put, Post, Delete, ClassMiddleware} from '@overnightjs/core';
+import {Controller, Get, Put, Post, ClassMiddleware} from '@overnightjs/core';
 import {checkJwt} from '../middleware/middleware';
 import { IRequest, IResponse} from '../models/models';
 import RentalsService from '../service/rentals.service';
@@ -11,23 +11,13 @@ import {IRentalDocument} from '../mongoose/rentals.model';
 @ClassMiddleware([checkJwt])
 export class RentalsController {
 
-    public propertiesService = new RentalsService();
+    public rentalsService = new RentalsService();
 
-    @Get('/assigned/all')
-    private getProperties(req: IRequest, res: IResponse) {
-        this.propertiesService.getRentals().then((properties: IRentalDocument[]) => {
-           res.json(properties);
-        }).catch((err) => {
-           Logger.Err(err);
-           res.status(500).send(ResponseModel.internalServerError);
-});
-
-}
 
     @Get('assigned')
-    private getPropertiesByAssignedTenant(req: IRequest, res: IResponse) {
+    private getRentalsByAssignedTenant(req: IRequest, res: IResponse) {
        // console.log(req.user)
-        this.propertiesService.getRentalsByAssignedTenant(req.user.sub).then((properties: IRentalDocument[]) => {
+        this.rentalsService.getRentalsByAssignedTenant(req.user.sub).then((properties: IRentalDocument[]) => {
             res.json(properties);
         }).catch((err) => {
             Logger.Err(err);
@@ -42,7 +32,7 @@ export class RentalsController {
         if (!req.params.registrationCode) {
             return res.status(400).send(ResponseModel.paramMissingError);
         }
-        this.propertiesService.assignTenant(req.user.sub, req.params.registrationCode).then((updated: IRentalDocument) => {
+        this.rentalsService.assignTenant(req.user.sub, req.params.registrationCode).then((updated: IRentalDocument) => {
            return res.json(updated);
         }).catch((err: any) => {
             if (err === 404) {
@@ -55,16 +45,16 @@ export class RentalsController {
 
     }
 
-    @Delete('unassign/:id')
-    private unassignTenant(req: IRequest, res: IResponse) {
+    @Put('unassign/:id')
+    private removeTenant(req: IRequest, res: IResponse) {
         if (!req.params.id) {
-            res.status(400).send(ResponseModel.paramMissingError);
+            return res.status(400).send(ResponseModel.paramMissingError);
         }
-        this.propertiesService.unasignTenant(req.user.sub, req.params.id).then((updated) => {
-            res.json(updated);
+        this.rentalsService.unasignTenant(req.user.sub, req.params.id).then((updated) => {
+            return res.json(updated);
         }).catch((err) => {
             Logger.Err(err);
-            res.status(500).send(ResponseModel.internalServerError);
+            return res.status(500).send(ResponseModel.internalServerError);
         });
 
     }

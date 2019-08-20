@@ -42,7 +42,6 @@ class AppServer extends Server {
 
     public start(port: number): void {
         this.app.listen(port, () => {
-
             Logger.Imp('Server Started: ' + port);
         });
     }
