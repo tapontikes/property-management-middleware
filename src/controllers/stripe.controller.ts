@@ -4,7 +4,7 @@ import {IRequest, IResponse} from '../models/models';
 import StripeService from '../service/stripe.service';
 import ResponseModel from '../models/response.model';
 import * as Stripe from 'stripe';
-import {IList} from 'stripe';
+import {IList, IStripeSource} from 'stripe';
 import InvoiceItem = Stripe.invoiceItems.InvoiceItem;
 import {Logger} from '@overnightjs/logger';
 import IInvoice = Stripe.invoices.IInvoice;
@@ -12,6 +12,7 @@ import ISubscriptionCreationOptions = Stripe.subscriptions.ISubscriptionCreation
 import ICustomer = Stripe.customers.ICustomer;
 import StripeError = Stripe.errors.StripeError;
 import ICustomerUpdateOptions = Stripe.customers.ICustomerUpdateOptions;
+import ICustomerSourceCreationOptions = Stripe.customers.ICustomerSourceCreationOptions;
 
 
 
@@ -35,17 +36,17 @@ export class StripeController {
     }
 
     @Post('customer/source')
-    public updateStripeCustomerSource(req: IRequest, res: IResponse) {
-        if (! req.body.source){
+    public attachNewCustomerSource(req: IRequest, res: IResponse) {
+        if (! req.body.source) {
             return res.status(404).send(ResponseModel.propertyNotFound);
         }
 
-        const customer: ICustomerUpdateOptions = {
+        const sourceOptions: ICustomerSourceCreationOptions = {
             source: req.body.source,
         };
 
-        this.stripeService.updateCustomer(req.user.sub, customer).then((newCustomer: ICustomer) =>{
-            return res.status(200).send(newCustomer);
+        this.stripeService.attachCustomerSource(req.user.sub, sourceOptions).then((newSource: IStripeSource) =>{
+            return res.status(200).send(newSource);
         }).catch((err: StripeError) => {
             Logger.Err(err);
             return res.status(500).send(err);

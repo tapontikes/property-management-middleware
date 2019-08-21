@@ -1,7 +1,7 @@
 import {IProduct} from '../models/models';
 import {STRIPE_API_SECRET} from '../../utils/config';
 import * as Stripe from 'stripe';
-import {IDeleteConfirmation, IList} from 'stripe';
+import {ICard, IDeleteConfirmation, IList, IStripeSource} from 'stripe';
 import IPlan = Stripe.plans.IPlan;
 import StripeError = Stripe.errors.StripeError;
 import IPlanCreationOptions = Stripe.plans.IPlanCreationOptions;
@@ -13,6 +13,8 @@ import ISubscriptionCreationOptions = Stripe.subscriptions.ISubscriptionCreation
 import ISubscription = Stripe.subscriptions.ISubscription;
 import ICustomerUpdateOptions = Stripe.customers.ICustomerUpdateOptions;
 import ICustomer = Stripe.customers.ICustomer;
+import ICustomerCardSourceCreationOptions = Stripe.customers.ICustomerCardSourceCreationOptions;
+import ICustomerSourceCreationOptions = Stripe.customers.ICustomerSourceCreationOptions;
 
 
 class StripeService {
@@ -33,7 +35,7 @@ class StripeService {
         });
     }
 
-    public getCustomer(sub: string){
+    public getCustomer(sub: string) {
         return new Promise<ICustomer>((resolve, reject) => {
             this.stripeService.customers.retrieve(sub).then((customer: ICustomer) => {
                 resolve(customer);
@@ -47,6 +49,16 @@ class StripeService {
         return new Promise<ICustomer>((resolve, reject) => {
             this.stripeService.customers.update(sub, customerOptions).then((customer: ICustomer) => {
                 resolve(customer);
+            }).catch((err: StripeError) => {
+                reject(err);
+            });
+        });
+    }
+
+    public attachCustomerSource(sub: string, sourceOptions: ICustomerSourceCreationOptions) {
+        return new Promise<IStripeSource>((resolve, reject) => {
+            this.stripeService.customers.createSource(sub, sourceOptions).then((source: IStripeSource) => {
+                resolve(source);
             }).catch((err: StripeError) => {
                 reject(err);
             });
