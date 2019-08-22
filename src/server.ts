@@ -7,6 +7,7 @@ import mongoose = require('mongoose');
 import {MONGO_PASSWORD, MONGO_URL, MONGO_USER} from '../utils/config';
 import {AdminController} from './controllers/admin.controller';
 import {StripeController} from './controllers/stripe.controller';
+import {EnvironmentController} from './controllers/environment.controller';
 
 class AppServer extends Server {
 
@@ -25,7 +26,8 @@ class AppServer extends Server {
         const userCtrl = new UserController();
         const adminCtrl = new AdminController();
         const stripeCtrl = new StripeController();
-        super.addControllers([propertyCtrl, userCtrl, stripeCtrl, adminCtrl]);
+        const environmentCtrl = new EnvironmentController();
+        super.addControllers([propertyCtrl, userCtrl, stripeCtrl, adminCtrl, environmentCtrl]);
     }
     public connectDb(): void {
         mongoose.Promise = Promise;

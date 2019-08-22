@@ -13,6 +13,7 @@ import ICustomer = Stripe.customers.ICustomer;
 import StripeError = Stripe.errors.StripeError;
 import ICustomerUpdateOptions = Stripe.customers.ICustomerUpdateOptions;
 import ICustomerSourceCreationOptions = Stripe.customers.ICustomerSourceCreationOptions;
+import ISubscription = Stripe.subscriptions.ISubscription;
 
 
 
@@ -80,11 +81,19 @@ export class StripeController {
 
     @Post('subscription')
     public createStripeSubscription(req: IRequest, res: IResponse) {
-        const test = {
+        const sub = {
             customer: req.user.sub,
-            default_source: req.body.source,
+            items: [
+                {
+                    plan: req.body.rentalId,
+                },
+            ],
             // @TODO implement stripe subscription using source token from front end
         }as ISubscriptionCreationOptions;
+
+        this.stripeService.createStripeSubscription(sub).then((subscripton: ISubscription) => {
+            res.status(200).send(subscripton);
+        });
 
     }
 

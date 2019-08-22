@@ -19,12 +19,11 @@ export class UserController {
         });
     }
 
-    @Put('update')
+    @Put('metadata')
     private updateUserMetadata(req: IRequest, res: IResponse) {
         this.userService.updateUserMetadata(req.user.sub, req.body).then((response) =>{
             res.send(response);
         });
     }
-
 
 }

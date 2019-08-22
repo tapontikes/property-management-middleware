@@ -15,11 +15,13 @@ import ICustomerUpdateOptions = Stripe.customers.ICustomerUpdateOptions;
 import ICustomer = Stripe.customers.ICustomer;
 import ICustomerCardSourceCreationOptions = Stripe.customers.ICustomerCardSourceCreationOptions;
 import ICustomerSourceCreationOptions = Stripe.customers.ICustomerSourceCreationOptions;
+import UserService from './user.service';
 
 
 class StripeService {
 
     private stripeService = new Stripe(STRIPE_API_SECRET);
+    private userService = new UserService();
 
 
     // Customer
@@ -111,9 +113,9 @@ class StripeService {
 
 
     public createStripeSubscription(subscription: ISubscriptionCreationOptions) {
-        return new Promise((resolve, reject) => {
-            this.stripeService.subscriptions.create(subscription).then((newSubscription: ISubscription) =>{
-                resolve(newSubscription);
+        return new Promise<ISubscription>((resolve, reject) => {
+            this.stripeService.subscriptions.create(subscription).then((newSubscription: ISubscription) => {
+                 resolve(newSubscription);
             }).catch((err: StripeError) => {
                 reject(err);
             });
@@ -142,6 +144,7 @@ class StripeService {
             });
         });
     }
+
 
     public static stripeId(id: string): string {
         return id.replace('|', '_');
